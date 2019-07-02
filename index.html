@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alpha Video QA Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        main {
+            display: grid;
+            grid-template: "input-sec" 120px
+                           "video-sec" / minmax(min-content, 854px);
+            min-height: 100vh;
+            justify-items: left;
+            margin: 0 auto;
+            width: 854px;
+            font-family: "American Typewriter", sans-serif;
+        }
+
+        #input-sec {
+            display: grid;
+            grid-area: input-sec;
+
+            grid-template: "video-inp video-inp" auto
+                           "background-inp fx-inp" / 1fr 1fr;
+
+            align-items: baseline;
+        }
+
+        #video-sec {
+            grid-area: video-sec;
+            display: flex;
+            flex-wrap: wrap;
+            place-content: center;
+        }
+
+        #video-inp {
+            grid-area: video-inp;
+            width: 100%;
+            display: flex;
+        }
+
+        #background-inp {
+            grid-area: background-inp;
+        }
+
+        #fx-inp {
+            grid-area: fx-inp;
+            justify-self: right;
+        }
+
+        #video-src {
+            font-family: monospace;
+            width: 50em;
+            padding: .5em;
+            font-size: 12px;
+        }
+
+        #target,
+        #video {
+            max-width: 854px;
+        }
+
+        #target.hide {
+            display: none;
+        }
+
+        #video.hide {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section id="input-sec">
+            <p id="video-inp">
+                <label>Video: <input type="url" id="video-src" placeholder="Enter video URL"/></label>
+                <button id="video-go">Go!</button>
+            </p>
+            <p id="background-inp">
+                <label>Background color: <input type="color" id="background-color" value="#ffffff"/></label>
+            </p>
+            <p id="fx-inp">
+                <label>Toggle effects: <input id="fx-toggle" type="checkbox" checked="checked"/></label>
+            </p>
+        </section>
+        <section id="video-sec">
+            <canvas id="target"></canvas>
+            <video id="video"
+                   src="https://video.wixstatic.com/video/11062b_276dd38d34324859962186124a5b4340/720p/mp4/file.mp4"
+                   loop
+                   preload="auto"
+                   crossorigin="anonymous"
+                   autoplay
+                   muted
+                   playsinline
+                   class="hide"></video>
+        </section>
+    </main>
+    <script src="index.js"></script>
+</body>
+</html>
