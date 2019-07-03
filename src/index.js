@@ -16,6 +16,7 @@ const backgroundInput = document.querySelector('#background-color');
 const urlInput = document.querySelector('#video-src');
 const fileInput = document.querySelector('#file-src');
 const videoGo = document.querySelector('#video-go');
+const playButton = document.querySelector('#play-button');
 
 function play () {
     media.play();
@@ -30,8 +31,14 @@ function play () {
     (fxEnabled ? target : media).classList.remove('hide');
 }
 
+function togglePlay () {
+    playButton.classList.toggle('hide');
+}
+
 function changeSrc (src, ext, cb) {
     kampos.stop();
+
+    togglePlay();
 
     (fxEnabled ? target : media).classList.add('hide');
 
@@ -52,14 +59,19 @@ function changeSrc (src, ext, cb) {
 
     media.load();
 
-    media.addEventListener('canplay', play, {once: true});
+    media.addEventListener('canplay', togglePlay, {once: true});
 
     if (cb) {
         media.addEventListener('canplaythrough', cb, {once: true});
     }
 }
 
-media.addEventListener('canplay', play, {once: true});
+media.addEventListener('canplay', togglePlay, {once: true});
+
+playButton.addEventListener('click', () => {
+    play();
+    togglePlay();
+});
 
 fxToggle.addEventListener('change', e => {
     fxEnabled = e.target.checked;
@@ -76,7 +88,7 @@ fileInput.addEventListener('change', e => {
     const file = e.target.files[0];
     const url = URL.createObjectURL(file);
 
-    changeSrc(url, file.name.split('.')[1], () => {
+    changeSrc(url, file.name.split('.').reverse()[0], () => {
         URL.revokeObjectURL(url);
     });
 });
@@ -91,7 +103,7 @@ function drop (e) {
     const file = e.dataTransfer.files[0];
     const url = URL.createObjectURL(file);
 
-    changeSrc(url, file.name.split('.')[1], () => {
+    changeSrc(url, file.name.split('.').reverse()[0], () => {
         URL.revokeObjectURL(url);
     });
 }

@@ -31,6 +31,7 @@
             display: grid;
             place-content: center;
             width: 100%;
+            position: relative;
         }
 
         #video-inp {
@@ -72,6 +73,26 @@
         #video.hide {
             visibility: hidden;
         }
+
+        #play-button {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 2em;
+            background-color: chocolate;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        #play-button:hover {
+            background-color: gold;
+            color: dimgray;
+        }
+
+        #play-button.hide {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -104,6 +125,7 @@
                 <source src="https://video.wixstatic.com/video/11062b_276dd38d34324859962186124a5b4340/720p/mp4/file.mp4"
                         type="video/mp4">
             </video>
+            <div id="play-button" class="hide">Play</div>
         </section>
     </main>
     <script src="index.js"></script>
