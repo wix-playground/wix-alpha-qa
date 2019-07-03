@@ -20,23 +20,27 @@
             display: grid;
             grid-area: input-sec;
 
-            grid-template: "video-inp video-inp" auto
-                           "background-inp fx-inp" / 1fr 1fr;
+            grid-template: "video-inp video-inp video-inp" auto
+                           "file-inp background-inp fx-inp" / 1fr 1fr 1fr;
 
             align-items: baseline;
         }
 
         #video-sec {
             grid-area: video-sec;
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
             place-content: center;
+            width: 100%;
         }
 
         #video-inp {
             grid-area: video-inp;
             width: 100%;
             display: flex;
+        }
+
+        #file-inp {
+            grid-area: file-inp;
         }
 
         #background-inp {
@@ -58,6 +62,7 @@
         #target,
         #video {
             max-width: 854px;
+            align-self: center;
         }
 
         #target.hide {
@@ -73,8 +78,11 @@
     <main>
         <section id="input-sec">
             <p id="video-inp">
-                <label>Video: <input type="url" id="video-src" placeholder="Enter video URL"/></label>
+                <label>URL: <input type="url" id="video-src" placeholder="Enter video URL"/></label>
                 <button id="video-go">Go!</button>
+            </p>
+            <p id="file-inp">
+                <label>File: <input type="file" id="file-src"/></label>
             </p>
             <p id="background-inp">
                 <label>Background color: <input type="color" id="background-color" value="#ffffff"/></label>
@@ -86,14 +94,16 @@
         <section id="video-sec">
             <canvas id="target"></canvas>
             <video id="video"
-                   src="https://video.wixstatic.com/video/11062b_276dd38d34324859962186124a5b4340/720p/mp4/file.mp4"
                    loop
                    preload="auto"
                    crossorigin="anonymous"
                    autoplay
                    muted
                    playsinline
-                   class="hide"></video>
+                   class="hide">
+                <source src="https://video.wixstatic.com/video/11062b_276dd38d34324859962186124a5b4340/720p/mp4/file.mp4"
+                        type="video/mp4">
+            </video>
         </section>
     </main>
     <script src="index.js"></script>

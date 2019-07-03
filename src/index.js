@@ -13,10 +13,13 @@ let fxEnabled = true;
 
 const fxToggle = document.querySelector('#fx-toggle');
 const backgroundInput = document.querySelector('#background-color');
-const videoInput = document.querySelector('#video-src');
+const urlInput = document.querySelector('#video-src');
+const fileInput = document.querySelector('#file-src');
 const videoGo = document.querySelector('#video-go');
 
 function play () {
+    media.play();
+
     const width = Math.min(MAX_WIDTH, media.videoWidth);
     const height = media.videoHeight / 2 / media.videoWidth * width;
 
@@ -27,17 +30,36 @@ function play () {
     (fxEnabled ? target : media).classList.remove('hide');
 }
 
-function changeSrc (src) {
+function changeSrc (src, ext, cb) {
     kampos.stop();
 
     (fxEnabled ? target : media).classList.add('hide');
 
-    media.src = src;
+    media.firstElementChild.setAttribute('src', src);
 
-    media.addEventListener('playing', play, {once: true});
+    let type = 'video/';
+
+    switch (ext) {
+        case 'mov':
+            type += 'quicktime';
+            break;
+        case 'mp4':
+        default:
+            type += ext;
+    }
+
+    media.firstElementChild.setAttribute('type', type);
+
+    media.load();
+
+    media.addEventListener('canplay', play, {once: true});
+
+    if (cb) {
+        media.addEventListener('canplaythrough', cb, {once: true});
+    }
 }
 
-media.addEventListener('playing', play, {once: true});
+media.addEventListener('canplay', play, {once: true});
 
 fxToggle.addEventListener('change', e => {
     fxEnabled = e.target.checked;
@@ -50,8 +72,17 @@ backgroundInput.addEventListener('change', e => {
     document.body.style.backgroundColor = e.target.value;
 });
 
+fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+
+    changeSrc(url, file.name.split('.')[1], () => {
+        URL.revokeObjectURL(url);
+    });
+});
+
 videoGo.addEventListener('click', () => {
-    changeSrc(videoInput.value);
+    changeSrc(urlInput.value, urlInput.value.split('.').reverse()[0]);
 });
 
 function drop (e) {
@@ -59,11 +90,10 @@ function drop (e) {
 
     const file = e.dataTransfer.files[0];
     const url = URL.createObjectURL(file);
-    changeSrc(url);
 
-    setTimeout(() => {
+    changeSrc(url, file.name.split('.')[1], () => {
         URL.revokeObjectURL(url);
-    }, 0);
+    });
 }
 
 
