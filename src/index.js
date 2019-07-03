@@ -54,9 +54,9 @@ function changeSrc (src, ext, cb) {
 
     media.addEventListener('canplay', play, {once: true});
 
-    // if (cb) {
-    //     media.addEventListener('canplaythrough', cb, {once: true});
-    // }
+    if (cb) {
+        media.addEventListener('canplaythrough', cb, {once: true});
+    }
 }
 
 media.addEventListener('canplay', play, {once: true});
