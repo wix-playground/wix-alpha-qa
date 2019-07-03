@@ -1305,9 +1305,9 @@ void main() {
 
         media.addEventListener('canplay', play, {once: true});
 
-        if (cb) {
-            media.addEventListener('canplaythrough', cb, {once: true});
-        }
+        // if (cb) {
+        //     media.addEventListener('canplaythrough', cb, {once: true});
+        // }
     }
 
     media.addEventListener('canplay', play, {once: true});
@@ -1327,9 +1327,7 @@ void main() {
         const file = e.target.files[0];
         const url = URL.createObjectURL(file);
 
-        changeSrc(url, file.name.split('.')[1], () => {
-            URL.revokeObjectURL(url);
-        });
+        changeSrc(url, file.name.split('.')[1]);
     });
 
     videoGo.addEventListener('click', () => {
@@ -1342,9 +1340,7 @@ void main() {
         const file = e.dataTransfer.files[0];
         const url = URL.createObjectURL(file);
 
-        changeSrc(url, file.name.split('.')[1], () => {
-            URL.revokeObjectURL(url);
-        });
+        changeSrc(url, file.name.split('.')[1]);
     }
 
 
