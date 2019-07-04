@@ -1264,10 +1264,20 @@ void main() {
 
     const fxToggle = document.querySelector('#fx-toggle');
     const backgroundInput = document.querySelector('#background-color');
+    const videoSection = document.querySelector('#video-sec');
     const urlInput = document.querySelector('#video-src');
     const fileInput = document.querySelector('#file-src');
     const videoGo = document.querySelector('#video-go');
     const playButton = document.querySelector('#play-button');
+
+    function draw$1 () {
+        const width = Math.min(MAX_WIDTH, media.videoWidth);
+        const height = media.videoHeight / 2 / media.videoWidth * width;
+
+        kampos.setSource({media, width, height});
+
+        kampos.draw();
+    }
 
     function play () {
         media.play();
@@ -1279,17 +1289,32 @@ void main() {
 
         kampos.play();
 
+        videoSection.classList.add('pausable');
+        videoSection.addEventListener('click', videoPause, {once: true});
+
         (fxEnabled ? target : media).classList.remove('hide');
     }
 
-    function togglePlay () {
-        playButton.classList.toggle('hide');
+    function togglePlay (show) {
+        playButton.classList.toggle('hide', !show);
+    }
+
+    function canPlay () {
+        togglePlay(true);
+        draw$1();
+    }
+
+    function videoPause () {
+        if (!media.paused) {
+            videoSection.classList.remove('pausable');
+            media.pause();
+            kampos.stop();
+            togglePlay(true);
+        }
     }
 
     function changeSrc (src, ext, cb) {
         kampos.stop();
-
-        togglePlay();
 
         (fxEnabled ? target : media).classList.add('hide');
 
@@ -1310,18 +1335,19 @@ void main() {
 
         media.load();
 
-        media.addEventListener('canplay', togglePlay, {once: true});
+        media.addEventListener('canplay', canPlay, {once: true});
 
         if (cb) {
             media.addEventListener('canplaythrough', cb, {once: true});
         }
     }
 
-    media.addEventListener('canplay', togglePlay, {once: true});
+    media.addEventListener('canplay', canPlay, {once: true});
 
-    playButton.addEventListener('click', () => {
+    playButton.addEventListener('click', (e) => {
+        e.stopPropagation();
         play();
-        togglePlay();
+        togglePlay(false);
     });
 
     fxToggle.addEventListener('change', e => {
@@ -1358,7 +1384,6 @@ void main() {
             URL.revokeObjectURL(url);
         });
     }
-
 
     body.addEventListener('dragenter', e => e.preventDefault(), false);
     body.addEventListener('dragover', e => e.preventDefault(), false);

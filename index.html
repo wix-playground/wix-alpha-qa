@@ -34,6 +34,10 @@
             position: relative;
         }
 
+        #video-sec.pausable {
+            cursor: pointer;
+        }
+
         #video-inp {
             grid-area: video-inp;
             width: 100%;
@@ -118,7 +122,6 @@
                    loop
                    preload="auto"
                    crossorigin="anonymous"
-                   autoplay
                    muted
                    playsinline
                    class="hide">
