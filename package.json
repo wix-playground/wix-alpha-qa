@@ -1,6 +1,6 @@
 {
   "name": "wix-alpha-qa",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "QA tool for alpha videos",
   "main": "index.js",
   "scripts": {
