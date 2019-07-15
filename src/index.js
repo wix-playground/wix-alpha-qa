@@ -10,6 +10,7 @@ const kampos = new Kampos({target, effects: fx});
 
 const MAX_WIDTH = 854;
 let fxEnabled = true;
+let objUrl;
 
 const fxToggle = document.querySelector('#fx-toggle');
 const backgroundInput = document.querySelector('#background-color');
@@ -19,9 +20,19 @@ const fileInput = document.querySelector('#file-src');
 const videoGo = document.querySelector('#video-go');
 const playButton = document.querySelector('#play-button');
 
-function draw () {
+function scaleCanvas () {
     const width = Math.min(MAX_WIDTH, media.videoWidth);
     const height = media.videoHeight / 2 / media.videoWidth * width;
+
+    target.style.width = width;
+    target.style.height = height;
+}
+
+function draw () {
+    const width = media.videoWidth;
+    const height = media.videoHeight / 2;
+
+    scaleCanvas();
 
     kampos.setSource({media, width, height});
 
@@ -31,8 +42,10 @@ function draw () {
 function play () {
     media.play();
 
-    const width = Math.min(MAX_WIDTH, media.videoWidth);
-    const height = media.videoHeight / 2 / media.videoWidth * width;
+    const width = media.videoWidth;
+    const height = media.videoHeight / 2;
+
+    scaleCanvas();
 
     kampos.setSource({media, width, height});
 
@@ -62,7 +75,7 @@ function videoPause () {
     }
 }
 
-function changeSrc (src, ext, cb) {
+function changeSrc (src, ext) {
     kampos.stop();
 
     (fxEnabled ? target : media).classList.add('hide');
@@ -85,10 +98,6 @@ function changeSrc (src, ext, cb) {
     media.load();
 
     media.addEventListener('canplay', canPlay, {once: true});
-
-    if (cb) {
-        media.addEventListener('canplaythrough', cb, {once: true});
-    }
 }
 
 media.addEventListener('canplay', canPlay, {once: true});
@@ -111,12 +120,14 @@ backgroundInput.addEventListener('change', e => {
 });
 
 fileInput.addEventListener('change', e => {
-    const file = e.target.files[0];
-    const url = URL.createObjectURL(file);
+    if (objUrl) {
+        URL.revokeObjectURL(objUrl);
+    }
 
-    changeSrc(url, file.name.split('.').reverse()[0], () => {
-        URL.revokeObjectURL(url);
-    });
+    const file = e.target.files[0];
+    objUrl = URL.createObjectURL(file);
+
+    changeSrc(objUrl, file.name.split('.').reverse()[0]);
 });
 
 videoGo.addEventListener('click', () => {
@@ -126,12 +137,14 @@ videoGo.addEventListener('click', () => {
 function drop (e) {
     e.preventDefault();
 
-    const file = e.dataTransfer.files[0];
-    const url = URL.createObjectURL(file);
+    if (objUrl) {
+        URL.revokeObjectURL(objUrl);
+    }
 
-    changeSrc(url, file.name.split('.').reverse()[0], () => {
-        URL.revokeObjectURL(url);
-    });
+    const file = e.dataTransfer.files[0];
+    objUrl = URL.createObjectURL(file);
+
+    changeSrc(objUrl, file.name.split('.').reverse()[0]);
 }
 
 body.addEventListener('dragenter', e => e.preventDefault(), false);
